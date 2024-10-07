@@ -13,7 +13,14 @@ initializeApp({
 })
 const db = getFirestore();
 
-app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.engine('handlebars', handlebars({ 
+    helpers: {
+        eq: function (v1, v2) {
+          return v1 === v2
+        }
+    },  
+    defaultLayout: 'main' 
+}))
 app.set('view engine', 'handlebars')
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -72,7 +79,7 @@ app.get('/editar/:id', (req, res) => {
 app.post('/editar/:id', (req, res) => {
     const { nome, telefone, origem, data_contato, observacao } = req.body
     const { id } = req.params
-    db.collection('clientes').doc(id).set({
+    db.collection('clientes').doc(id).update({
         nome: nome,
         telefone: telefone,
         origem: origem,
